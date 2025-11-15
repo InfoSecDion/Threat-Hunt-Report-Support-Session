@@ -1,1 +1,1 @@
-# Threat Hunt Report: Support Session
+# Threat Hunt Report: Nov 2025 Cyber Range Challenge
