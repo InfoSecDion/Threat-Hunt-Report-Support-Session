@@ -68,7 +68,7 @@ The accumulated evidence makes it clear that this activity was not legitimate tr
 Identify the appropriate starting point for the hunt by analyzing indicators suggesting that support-themed scripts and helpdesk-style files were executed directly from the Downloads directory in early October.
 
 - **Primary Endpoint:** `gab-intern-vm`  
-- **Reasoning:** This system displayed the earliest and most consistent signs of suspicious support-tool activity, including an execution event from the Downloads folder on October 9th, 2025, at 12:22 PM—aligning with the suspected point of initial compromise.
+- **Reasoning:** Initial indicators suggested that support-themed scripts were executed from the Downloads directory. To establish a reliable starting point for the investigation, I used a broad query to identify the earliest occurrence of this behavior and determine which system first exhibited suspicious activity.
 - **KQL Query Used:**
 ```
 DeviceProcessEvents
@@ -83,16 +83,19 @@ DeviceProcessEvents
 | order by TimeGenerated asc
 
 ```
+This query was used in a broad detection context to surface any potentially suspicious executions tied to support-related tooling across the environment.
+
 <img width="1889" height="834" alt="Screenshot 2025-11-15 005615" src="https://github.com/user-attachments/assets/0904d4e9-65c2-47b3-8c51-2d59c7b90e33" />
 
 ---
 
 ## Flag Analysis
 
-### Flag 1 – Initial execution initiated
-- **Objective:** Determine which command-line argument was used during the earliest execution of the suspicious script.
+### Flag 1 – Execution Validation and Command-Line Analysis
+- **Objective:** Validate the initial suspicious execution and analyze the command-line context to determine how the script was executed.
 - **Hypothesis:** Threat actors frequently invoke PowerShell with modified or relaxed execution policies to bypass default security controls.
 - **KQL Query Used:**
+Since the initial detection identified suspicious executions from the Downloads directory, I reused the same query to validate the behavior and focus specifically on the earliest execution event and its command-line arguments.
 ```
 DeviceProcessEvents
 | where TimeGenerated between(datetime(2025-10-01)..datetime(2025-10-15))
@@ -105,6 +108,7 @@ DeviceProcessEvents
           InitiatingProcessCommandLine
 | order by TimeGenerated asc
 ```
+
 <img width="1884" height="790" alt="Screenshot 2025-11-15 010925" src="https://github.com/user-attachments/assets/60541c77-43b2-40a1-8cc8-3e7f179558e8" />
 
 
